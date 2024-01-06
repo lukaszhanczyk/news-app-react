@@ -1,6 +1,8 @@
 import {useRef, useState} from "react";
 import {useAuthContextProvider} from "../contexts/AuthContextProvider.jsx";
 import axiosClient from "../clients/axios-client.jsx";
+import {Button, Card, CardBody, CardTitle, Form, FormGroup, Input} from "reactstrap";
+import {Link} from "react-router-dom";
 
 function Signup() {
 
@@ -34,30 +36,57 @@ function Signup() {
     }
 
     return (
-        <div className={'login-signup-form animated fadeInDown'}>
-            <div className={'auth-card card'}>
-                <h1 className={"text-center title"}>
+        <Card className={'animated fadeInDown'}>
+            <CardBody>
+                <CardTitle tag="h1" className={'text-center'}>
                     Create new account
-                </h1>
-
+                </CardTitle>
                 {
                     error &&
-                    <div className={'animated fadeInDown alert'}>
-                        <p>{error}</p>
+                    <div className={'bg-danger animated fadeInDown rounded-1 p-2 mb-3 text-white'}>
+                        <span>{error}</span>
                     </div>
                 }
+                <Form onSubmit={ev => onSubmit(ev)}>
+                    <FormGroup>
+                        <Input
+                            innerRef={nameRef}
+                            placeholder="Full name"
+                            type="text"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            innerRef={emailRef}
+                            placeholder="Email"
+                            type="email"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            innerRef={passwordRef}
+                            placeholder="Password"
+                            type="password"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            innerRef={passwordConfirmationRef}
+                            placeholder="Confirm password"
+                            type="password"
+                        />
+                    </FormGroup>
 
-                <form onSubmit={ev => onSubmit(ev)}>
-                    <input ref={nameRef} placeholder={'Full name'} type="text"/>
-                    <input ref={emailRef} placeholder={'Email'} type="text"/>
-                    <input ref={passwordRef} placeholder={'Password'} type="text"/>
-                    <input ref={passwordConfirmationRef} placeholder={'Confirm password'} type="text"/>
-                    <button type={'submit'} className={'btn btn-block'}>Sign up</button>
-                </form>
+                    <Button type={'submit'} className={'btn-lg w-100'}>
+                        Sign up
+                    </Button>
 
-
-            </div>
-        </div>
+                </Form>
+                <div className={"p-2 text-center"}>
+                        Already registered? <Link to={"/login"}>Log in</Link>
+                </div>
+            </CardBody>
+        </Card>
     )
 }
 

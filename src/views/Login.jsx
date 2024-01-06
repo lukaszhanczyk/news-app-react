@@ -1,6 +1,8 @@
 import {useAuthContextProvider} from "../contexts/AuthContextProvider.jsx";
 import {useRef, useState} from "react";
 import axiosClient from "../clients/axios-client.jsx";
+import {Button, Card, CardBody, CardTitle, Form, FormGroup, Input} from "reactstrap";
+import {Link} from "react-router-dom";
 
 function Login() {
 
@@ -11,15 +13,15 @@ function Login() {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        const newUser = {
+        const user = {
             email: emailRef.current.value,
             password: passwordRef.current.value,
         }
 
-        // console.log(newUser)
-        axiosClient.post('/login', newUser)
+        axiosClient.post('/login', user)
             .then((response)=> {
                 const data = response.data
+                console.log(data)
                 setUser(data.user)
                 setToken(data.token)
             })
@@ -29,28 +31,42 @@ function Login() {
             })
     }
     return (
-        <div className={'login-signup-form animated fadeInDown'}>
-            <div className={'auth-card card'}>
-                <h1 className={"text-center title"}>
+        <Card className={'animated fadeInDown'}>
+            <CardBody>
+                <CardTitle tag="h1" className={'text-center'}>
                     Welcome!
-                </h1>
-
+                </CardTitle>
                 {
                     error &&
-                    <div className={'animated fadeInDown alert'}>
-                        <p>{error}</p>
+                    <div className={'bg-danger animated fadeInDown rounded-1 p-2 mb-3 text-white'}>
+                        <span>{error}</span>
                     </div>
                 }
+                <Form onSubmit={ev => onSubmit(ev)}>
+                    <FormGroup>
+                        <Input
+                            innerRef={emailRef}
+                            placeholder="Email"
+                            type="email"
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            innerRef={passwordRef}
+                            placeholder="Password"
+                            type="password"
+                        />
+                    </FormGroup>
 
-                <form onSubmit={ev => onSubmit(ev)}>
-                    <input ref={emailRef} placeholder={'Email'} type="text"/>
-                    <input ref={passwordRef} placeholder={'Password'} type="text"/>
-                    <button type={'submit'} className={'btn btn-block'}>Log in</button>
-                </form>
-
-
-            </div>
-        </div>
+                    <Button type={'submit'} className={'btn-lg w-100'}>
+                        Log in
+                    </Button>
+                </Form>
+                <div className={"p-2 text-center"}>
+                    Not registered? <Link to={"/signup"}>Sign up</Link>
+                </div>
+            </CardBody>
+        </Card>
     )
 }
 
