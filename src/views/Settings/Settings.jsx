@@ -33,6 +33,7 @@ function Settings() {
     const [source, setSource] = useState([]);
     const [category, setCategory] = useState([]);
     const [author, setAuthor] = useState([]);
+    const [error, setError] = useState();
     const navigate = useNavigate();
     const [_user, _setUser] = useState({
         id: null,
@@ -61,12 +62,11 @@ function Settings() {
                 setUser(data.data)
                 setFilters([])
                 navigate('/feed')
-                // setToken(data.token)
             })
-            // .catch((err) => {
-            //     const error = err.response.data.message
-            //     setError(error)
-            // })
+            .catch((err) => {
+                const error = err.response.data.message
+                setError(error)
+            })
     }
 
     useEffect(() => {
@@ -80,7 +80,7 @@ function Settings() {
                 !!Object.keys(user).length &&
                 <Container className={'animated fadeInDown'}>
                 <Row>
-                    <Col className={'flex align-content-center justify-content-center flex-column vh-100'}
+                    <Col className={'mt-5 flex-column vh-100'}
                          md={{
                              offset: 3,
                              size: 6
@@ -90,6 +90,14 @@ function Settings() {
                             <CardTitle tag="h1" className={'text-center'}>
                                 Settings
                             </CardTitle>
+                            {
+                                error &&
+                                <CardTitle className={'p-2'}><
+                                    div className={'bg-danger animated fadeInDown rounded-1 p-2 mb-3 text-white'}>
+                                        <span>{error}</span>
+                                    </div>
+                                </CardTitle>
+                            }
                             <Form onSubmit={ev => onSubmit(ev)}>
                                 <CardBody>
                                     <FormGroup>

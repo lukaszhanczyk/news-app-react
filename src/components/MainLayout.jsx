@@ -34,7 +34,7 @@ function MainLayout() {
             .catch((err) => {
                 if (err){
                     setUser({})
-                    setFilters(null)
+                    setFilters({})
                     setToken(null)
                     navigate('/login')
                 }
@@ -42,7 +42,7 @@ function MainLayout() {
     }, []);
 
     if (!token) {
-        return <Navigate to={"/"}/>
+        return <Navigate to={"/login"}/>
     }
 
     const onLogout = (ev) => {
@@ -50,7 +50,7 @@ function MainLayout() {
         axiosClient.get('/logout')
             .then(() => {
                 setUser({})
-                setFilters(null)
+                setFilters({})
                 setToken(null)
             })
     }

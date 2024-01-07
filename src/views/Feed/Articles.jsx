@@ -17,7 +17,6 @@ function Articles() {
 
     useEffect(() => {
         setArticles([])
-        console.log(filters)
         if (Object.keys(filters).length > 0){
             axiosClient.get(`/articles`, {params: filters})
                 .then(response => {
@@ -25,6 +24,8 @@ function Articles() {
                     setArticles(_articles.data)
                 })
         }
+        setPage(2);
+        setIsMore(true);
     }, [filters]);
 
     const fetchData = () => {

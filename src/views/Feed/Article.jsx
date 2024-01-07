@@ -14,10 +14,13 @@ function Article(props) {
                         {props?.apiSource?.name}
                     </CardSubtitle>
                 }
+                <CardTitle className="mt-2" tag="h4">
+                    {props.title}
+                </CardTitle>
                 {
                     props?.authors &&
                     <CardSubtitle
-                        className="mb-2 text-muted"
+                        className="mt-2 text-muted"
                         tag="h6"
                     >
                         {Object.keys(props?.authors).map(key => (
@@ -29,9 +32,6 @@ function Article(props) {
 
                     </CardSubtitle>
                 }
-                <CardTitle className="mt-2" tag="h4">
-                    {props.title}
-                </CardTitle>
             </CardBody>
             {
                 props.url_to_image &&
@@ -58,6 +58,12 @@ function Article(props) {
                     props?.source?.name &&
                     <ListGroupItem>
                         {props?.source?.name}
+                    </ListGroupItem>
+                }
+                {
+                    props?.category?.name &&
+                    <ListGroupItem>
+                        {props?.category?.name}
                     </ListGroupItem>
                 }
                 {
