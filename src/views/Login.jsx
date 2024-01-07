@@ -21,7 +21,6 @@ function Login() {
         axiosClient.post('/login', user)
             .then((response)=> {
                 const data = response.data
-                console.log(data)
                 setUser(data.user)
                 setToken(data.token)
             })

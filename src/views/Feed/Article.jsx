@@ -1,33 +1,73 @@
-import {Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle} from "reactstrap";
+import {Card, CardBody, CardLink, CardSubtitle, CardText, CardTitle, ListGroup, ListGroupItem} from "reactstrap";
 
 function Article(props) {
 
     return (
         <Card className={'mb-4'}>
             <CardBody>
-                <CardTitle tag="h5">
+                {
+                    props?.apiSource?.name &&
+                    <CardSubtitle
+                        className="mb-2 text-muted"
+                        tag="h5"
+                    >
+                        {props?.apiSource?.name}
+                    </CardSubtitle>
+                }
+                {
+                    props?.authors &&
+                    <CardSubtitle
+                        className="mb-2 text-muted"
+                        tag="h6"
+                    >
+                        {Object.keys(props?.authors).map(key => (
+                            <span key={key}>
+                                {(props?.authors[key].name).toLowerCase().replace(/(^\w{1})|(\s\w{1})/g, (v) => v.toUpperCase())}
+                                {props?.authors.length === parseInt(key) + 1 ? "" : <span> | </span>}
+                            </span>
+                        ))}
+
+                    </CardSubtitle>
+                }
+                <CardTitle className="mt-2" tag="h4">
                     {props.title}
                 </CardTitle>
-                <CardSubtitle
-                    className="mb-2 text-muted"
-                    tag="h6"
-                >
-                    Card subtitle
-                </CardSubtitle>
             </CardBody>
-            <img
+            {
+                props.url_to_image &&
+                <img
                 alt="Card cap"
                 src={props.url_to_image}
                 width="100%"
-            />
+                />
+            }
             <CardBody>
-                <CardText>
-                    Some quick example text to build on the card title and make up the bulk of the card‘s content.
-                </CardText>
+                {
+                    props?.description &&
+                    <CardText>
+                        {props?.description}
+                    </CardText>
+                }
                 <CardLink href={props.url}>
-                    Another Link
+                    Go to article
                 </CardLink>
             </CardBody>
+
+            <ListGroup flush>
+                {
+                    props?.source?.name &&
+                    <ListGroupItem>
+                        {props?.source?.name}
+                    </ListGroupItem>
+                }
+                {
+                    props?.published_at &&
+                    <ListGroupItem>
+                        {props?.published_at}
+                    </ListGroupItem>
+                }
+            </ListGroup>
+
         </Card>
     )
 }

@@ -5,7 +5,7 @@ import Signup from "./views/Signup.jsx";
 import Login from "./views/Login.jsx";
 import MainLayout from "./components/MainLayout.jsx";
 import Feed from "./views/Feed/Feed.jsx";
-import Settings from "./views/Settings.jsx";
+import Settings from "./views/Settings/Settings.jsx";
 
 const router = createBrowserRouter([
     {

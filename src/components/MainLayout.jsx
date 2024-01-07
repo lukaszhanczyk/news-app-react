@@ -14,8 +14,9 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import axiosClient from "../clients/axios-client.jsx";
+import {useUser} from "../hooks/useUser.jsx";
 
 function MainLayout() {
     const {user, token, setUser, setToken} = useAuthContextProvider()
@@ -25,8 +26,8 @@ function MainLayout() {
 
     useEffect(() => {
         axiosClient.get('/user')
-            .then(response => {
-                const user = response.data;
+            .then(({data}) => {
+                const user = data.data;
                 setUser(user)
             })
             .catch((err) => {

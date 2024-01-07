@@ -9,10 +9,10 @@ function Feed() {
 
     return (
         <>
-            <Container>
+            <Container className={'animated fadeInDown'}>
                 <Row>
                     <Col className={'mt-5'}>
-                        <Filters setFilters={setFilters}/>
+                        <Filters setFilters={setFilters} filters={filters}/>
                     </Col>
                 </Row>
                 <Row>

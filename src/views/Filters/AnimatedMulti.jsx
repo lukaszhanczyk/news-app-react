@@ -1,5 +1,6 @@
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+import {useEffect} from "react";
 
 function AnimatedMulti(props) {
 
@@ -11,15 +12,20 @@ function AnimatedMulti(props) {
         firstOption = props.options[0];
         options = props.options;
     }
-
+    useEffect(() => {
+        if (props.defaultValue){
+            const ids = props.defaultValue.map(element => element.value);
+            props.setSelectRef(ids)
+        }
+    }, []);
     return (
         <Select
-            innerRef={props.ref}
             closeMenuOnSelect={false}
             components={animatedComponents}
-            defaultValue={[firstOption]}
+            defaultValue={props.defaultValue}
             isMulti
             options={options}
+            onChange={(choices) => props.setSelectRef(choices.map(choice => choice.value))}
         />
     );
 }

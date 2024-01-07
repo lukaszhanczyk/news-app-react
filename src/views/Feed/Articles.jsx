@@ -4,15 +4,19 @@ import axiosClient from "../../clients/axios-client.jsx";
 import Article from "./Article.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "./Loader.jsx";
+import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
 
 function Articles(props) {
+    const {user} = useAuthContextProvider()
+
     const [articles, setArticles] = useState([])
     const [isMore, setIsMore] = useState(true);
     const [page, setPage] = useState(2);
 
     useEffect(() => {
         setArticles([])
-        axiosClient.get(`/articles`, props.filters)
+        console.log(props.filters)
+        axiosClient.get(`/articles`, {params: props.filters})
             .then(response => {
                 const _articles = response.data;
                 setArticles(_articles.data)
@@ -20,7 +24,7 @@ function Articles(props) {
     }, [props.filters]);
 
     const fetchData = () => {
-        axiosClient.get(`/articles?page=${page}`)
+        axiosClient.get(`/articles?page=${page}`,{params: props.filters})
             .then(response => {
                 const _articles = response.data;
                 setArticles(prevItems => [...prevItems, ..._articles.data])
@@ -30,9 +34,7 @@ function Articles(props) {
                 } else {
                     setIsMore(false);
                 }
-
                 setPage(prevPage => prevPage + 1);
-
             })
     };
 

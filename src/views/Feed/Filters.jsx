@@ -8,73 +8,75 @@ import {
     NavbarText,
     NavbarToggler, NavItem
 } from "reactstrap";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+import ApiSourceFilter from "../Filters/ApiSourceFilter.jsx";
+import SourceFilter from "../Filters/SourceFilter.jsx";
+import CategoryFilter from "../Filters/CategoryFilter.jsx";
+import AuthorFilter from "../Filters/AuthorFilter.jsx";
+import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
+import {useFiltersContextProvider} from "../../contexts/FiltersContextProvider.jsx";
 
 function Filters(props) {
+    const {user} = useAuthContextProvider()
+    const {filters , setFilters} = useFiltersContextProvider()
+
     const [isOpen, setIsOpen] = useState(false);
-    const apiRef = useRef();
-    const sourceRef = useRef();
-    const categoryRef = useRef();
-    const authorRef = useRef();
+    const [api, setApi] = useState([]);
+    const [source, setSource] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [author, setAuthor] = useState([]);
+    const _setFilters = () => {
+        const filters = {
+            api: api,
+            source: source,
+            category: category,
+            author: author,
+        }
+        props.setFilters(filters);
+    }
     const toggle = () => setIsOpen(!isOpen);
 
     const onSubmit = (event) => {
         event.preventDefault()
-        const filters = {
-            api: apiRef.current.value,
-            source: sourceRef.current.value,
-            category: categoryRef.current.value,
-            author: authorRef.current.value,
-        }
-        props.setFilters(filters);
+        _setFilters()
     }
+
+    useEffect(() => {
+        _setFilters()
+    }, [user]);
 
     return (
         <div className={'mt-5'}>
             <h5>Filters</h5>
-            <Form className={''} onSubmit={ev => onSubmit(ev)}>
+            {
+                !!Object.keys(user).length &&
+                <Form className={''} onSubmit={ev => onSubmit(ev)}>
                 <Navbar
                     expand={'lg'}
                     container={'fluid'}
                 >
                     <NavbarToggler className={'vw-100'} onClick={toggle} />
-                    <Collapse isOpen={isOpen} navbar>
+                    <Collapse id={"filer-nav-bar"} isOpen={isOpen} navbar>
                         <Nav className="me-auto" navbar>
                             <NavItem>
-                                <FormGroup className={'p-lg-2'}>
-                                    <Label>Api</Label>
-                                    <Input
-                                        innerRef={apiRef}
-                                        type="string"
-                                    />
-                                </FormGroup>
+                                <ApiSourceFilter
+                                    setApi={setApi} defaultValue={user.api_sources}
+                                />
                             </NavItem>
                             <NavItem>
-                                <FormGroup className={'p-lg-2'}>
-                                    <Label>Source</Label>
-                                    <Input
-                                        innerRef={sourceRef}
-                                        type="string"
-                                    />
-                                </FormGroup>
+                                <SourceFilter
+                                    setSource={setSource} defaultValue={user.sources}
+                                />
                             </NavItem>
                             <NavItem>
-                                <FormGroup className={'p-lg-2'}>
-                                    <Label>Category</Label>
-                                    <Input
-                                        innerRef={categoryRef}
-                                        type="string"
-                                    />
-                                </FormGroup>
+                                <CategoryFilter
+                                    setCategory={setCategory} defaultValue={user.categories}
+                                />
                             </NavItem>
                             <NavItem>
-                                <FormGroup className={'p-lg-2'}>
-                                    <Label>Author</Label>
-                                    <Input
-                                        innerRef={authorRef}
-                                        type="string"
-                                    />
-                                </FormGroup>
+                                <AuthorFilter
+                                    setAuthor={setAuthor} defaultValue={user.authors}
+                                />
                             </NavItem>
                         </Nav>
                         <NavbarText>
@@ -85,6 +87,7 @@ function Filters(props) {
                     </Collapse>
                 </Navbar>
             </Form>
+            }
         </div>
     )
 }
