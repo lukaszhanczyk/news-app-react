@@ -2,13 +2,11 @@ import {
     Button,
     Collapse,
     Form,
-    FormGroup,
-    Input,
-    Label, Nav, Navbar,
+    Nav, Navbar,
     NavbarText,
     NavbarToggler, NavItem
 } from "reactstrap";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import ApiSourceFilter from "../Filters/ApiSourceFilter.jsx";
 import SourceFilter from "../Filters/SourceFilter.jsx";
 import CategoryFilter from "../Filters/CategoryFilter.jsx";
@@ -16,9 +14,9 @@ import AuthorFilter from "../Filters/AuthorFilter.jsx";
 import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
 import {useFiltersContextProvider} from "../../contexts/FiltersContextProvider.jsx";
 
-function Filters(props) {
+function Filters() {
     const {user} = useAuthContextProvider()
-    const {filters , setFilters} = useFiltersContextProvider()
+    const {setFilters} = useFiltersContextProvider()
 
     const [isOpen, setIsOpen] = useState(false);
     const [api, setApi] = useState([]);
@@ -32,7 +30,7 @@ function Filters(props) {
             category: category,
             author: author,
         }
-        props.setFilters(filters);
+        setFilters(filters);
     }
     const toggle = () => setIsOpen(!isOpen);
 
@@ -40,10 +38,6 @@ function Filters(props) {
         event.preventDefault()
         _setFilters()
     }
-
-    useEffect(() => {
-        _setFilters()
-    }, [user]);
 
     return (
         <div className={'mt-5'}>

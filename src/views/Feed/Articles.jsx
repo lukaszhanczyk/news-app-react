@@ -4,9 +4,11 @@ import axiosClient from "../../clients/axios-client.jsx";
 import Article from "./Article.jsx";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "./Loader.jsx";
+import {useFiltersContextProvider} from "../../contexts/FiltersContextProvider.jsx";
 import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
 
-function Articles(props) {
+function Articles() {
+    const {filters} = useFiltersContextProvider()
     const {user} = useAuthContextProvider()
 
     const [articles, setArticles] = useState([])
@@ -15,16 +17,18 @@ function Articles(props) {
 
     useEffect(() => {
         setArticles([])
-        console.log(props.filters)
-        axiosClient.get(`/articles`, {params: props.filters})
-            .then(response => {
-                const _articles = response.data;
-                setArticles(_articles.data)
-            })
-    }, [props.filters]);
+        console.log(filters)
+        if (Object.keys(filters).length > 0){
+            axiosClient.get(`/articles`, {params: filters})
+                .then(response => {
+                    const _articles = response.data;
+                    setArticles(_articles.data)
+                })
+        }
+    }, [filters]);
 
     const fetchData = () => {
-        axiosClient.get(`/articles?page=${page}`,{params: props.filters})
+        axiosClient.get(`/articles?page=${page}`,{params: filters})
             .then(response => {
                 const _articles = response.data;
                 setArticles(prevItems => [...prevItems, ..._articles.data])
@@ -39,6 +43,8 @@ function Articles(props) {
     };
 
     return (
+        <>{
+            !!Object.keys(user).length &&
         <InfiniteScroll
             dataLength={articles.length}
             next={fetchData}
@@ -61,7 +67,8 @@ function Articles(props) {
             </Row>
         </Container>
         </InfiniteScroll>
-
+        }
+            </>
     )
 }
 

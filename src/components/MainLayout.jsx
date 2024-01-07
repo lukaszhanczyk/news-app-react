@@ -14,12 +14,13 @@ import {
     Row,
     UncontrolledDropdown
 } from "reactstrap";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import axiosClient from "../clients/axios-client.jsx";
-import {useUser} from "../hooks/useUser.jsx";
+import {useFiltersContextProvider} from "../contexts/FiltersContextProvider.jsx";
 
 function MainLayout() {
     const {user, token, setUser, setToken} = useAuthContextProvider()
+    const {setFilters} = useFiltersContextProvider()
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate()
     const toggle = () => setIsOpen(!isOpen);
@@ -33,6 +34,7 @@ function MainLayout() {
             .catch((err) => {
                 if (err){
                     setUser({})
+                    setFilters(null)
                     setToken(null)
                     navigate('/login')
                 }
@@ -48,6 +50,7 @@ function MainLayout() {
         axiosClient.get('/logout')
             .then(() => {
                 setUser({})
+                setFilters(null)
                 setToken(null)
             })
     }

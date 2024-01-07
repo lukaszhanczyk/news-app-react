@@ -14,26 +14,66 @@ import {
 } from "reactstrap";
 import Filters from "../Feed/Filters.jsx";
 import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import ApiSourceFilter from "../Filters/ApiSourceFilter.jsx";
 import SourceFilter from "../Filters/SourceFilter.jsx";
 import CategoryFilter from "../Filters/CategoryFilter.jsx";
 import AuthorFilter from "../Filters/AuthorFilter.jsx";
+import axiosClient from "../../clients/axios-client.jsx";
+import {useNavigate} from "react-router-dom";
+import {useFiltersContextProvider} from "../../contexts/FiltersContextProvider.jsx";
 
 
 function Settings() {
-    const {user} = useAuthContextProvider()
-    const nameRef = useRef();
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const passwordConfirmationRef = useRef();
+    const {user, setUser} = useAuthContextProvider()
+    const {setFilters} = useFiltersContextProvider()
+
 
     const [api, setApi] = useState([]);
     const [source, setSource] = useState([]);
     const [category, setCategory] = useState([]);
     const [author, setAuthor] = useState([]);
+    const navigate = useNavigate();
+    const [_user, _setUser] = useState({
+        id: null,
+        email: '',
+        name: '',
+        password: '',
+        password_confirmation: '',
+    })
 
-    console.log(user)
+    const onSubmit = (event) => {
+        event.preventDefault()
+        const newUser = {
+            name: _user.name,
+            email: _user.email,
+            password: _user.password ?? null,
+            password_confirmation: _user.password_confirmation ?? null,
+            api: api,
+            source: source,
+            author: author,
+            category: category,
+        }
+
+        axiosClient.put(`/user/update/${user.id}`, newUser)
+            .then((response)=> {
+                const data = response.data
+                setUser(data.data)
+                setFilters([])
+                navigate('/feed')
+                // setToken(data.token)
+            })
+            // .catch((err) => {
+            //     const error = err.response.data.message
+            //     setError(error)
+            // })
+    }
+
+    useEffect(() => {
+        _setUser(user)
+    }, [user]);
+
+
     return (
         <>
             {
@@ -53,29 +93,32 @@ function Settings() {
                             <Form onSubmit={ev => onSubmit(ev)}>
                                 <CardBody>
                                     <FormGroup>
-                                        <Input
-                                            innerRef={nameRef}
+                                        <input
+                                            value={user.name}
+                                            onChange={event => _setUser({..._user, name: event.target.value})}
+                                            className={'form-control'}
                                             placeholder="Full name"
                                             type="text"
                                         />
                                     </FormGroup>
                                     <FormGroup>
-                                        <Input
-                                            innerRef={emailRef}
+                                        <input
+                                            value={user.email} onChange={event => _setUser({..._user, email: event.target.value})}
+                                            className={'form-control'}
                                             placeholder="Email"
-                                            type="email"
+                                            type='email'
                                         />
                                     </FormGroup>
                                     <FormGroup>
                                         <Input
-                                            innerRef={passwordRef}
+                                            onChange={event => _setUser({..._user, password: event.target.value})}
                                             placeholder="Password"
                                             type="password"
                                         />
                                     </FormGroup>
                                     <FormGroup>
                                         <Input
-                                            innerRef={passwordConfirmationRef}
+                                            onChange={event => _setUser({..._user, password_confirmation: event.target.value})}
                                             placeholder="Confirm password"
                                             type="password"
                                         />
@@ -107,7 +150,7 @@ function Settings() {
                                     </FormGroup>
 
                                     <Button type={'submit'} className={'btn-lg w-100'}>
-                                        Sign up
+                                        Update
                                     </Button>
                                 </CardBody>
                             </Form>

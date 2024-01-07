@@ -22,7 +22,6 @@ function Signup() {
             password_confirmation: passwordConfirmationRef.current.value,
         }
 
-        // console.log(newUser)
         axiosClient.post('/signup', newUser)
             .then((response)=> {
                 const data = response.data
