@@ -14,6 +14,7 @@ import AuthorFilter from "../Filters/AuthorFilter.jsx";
 import {useAuthContextProvider} from "../../contexts/AuthContextProvider.jsx";
 import {useFiltersContextProvider} from "../../contexts/FiltersContextProvider.jsx";
 import SearchBar from "../SearchBar.jsx";
+import DateFilter from "../Filters/DateFilter.jsx";
 
 function Filters() {
     const {user} = useAuthContextProvider()
@@ -25,10 +26,14 @@ function Filters() {
     const [category, setCategory] = useState([]);
     const [author, setAuthor] = useState([]);
     const [search, setSearch] = useState("");
+    const [dateFrom, setDateFrom] = useState();
+    const [dateTo, setDateTo] = useState();
     const toggle = () => setIsOpen(!isOpen);
 
     const _setFilters = () => {
         const filters = {
+            dateFrom: dateFrom,
+            dateTo: dateTo,
             search: search,
             api: api,
             source: source,
@@ -80,6 +85,14 @@ function Filters() {
                                 <NavItem>
                                     <AuthorFilter
                                         setAuthor={setAuthor} defaultValue={user.authors}
+                                    />
+                                </NavItem>
+                                <NavItem>
+                                    <DateFilter
+                                        dateFrom={dateFrom}
+                                        dateTo={dateTo}
+                                        setDateFrom={setDateFrom}
+                                        setDateTo={setDateTo}
                                     />
                                 </NavItem>
                             </Nav>
